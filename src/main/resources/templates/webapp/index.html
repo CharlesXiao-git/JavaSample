@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html >
+
+    <head>
+      <title>FileUpload</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" />
+		<script src="https://cdn.static.runoob.com/libs/angular.js/1.4.6/angular.min.js"></script> 
+        <style>
+            .my-drop-zone { border: dotted 3px lightgray; }
+            .nv-file-over { border: dotted 3px red; }
+            .another-file-over-class { border: dotted 3px green; }
+            html, body { height: 100%; }
+        </style>
+        
+        <script>
+			var app = angular.module('myApp', []);
+			app.controller('fileUpload', function($scope, $http) {
+			    
+			    $scope.upload = function() {
+			  
+			        $http.get("http://127.0.0.1:8080/getBucketNumber")
+			  		.success(function (response) {
+			  			$scope.sum = response;
+			  		}
+			  		); 
+			        
+			    };
+			    $scope.upload();
+			    
+			});
+			</script>
+
+	</head>
+   
+    <body ng-app="myApp" ng-controller="fileUpload">
+
+        <div class="container">
+
+            <div class="navbar navbar-default">
+                <div class="navbar-header">
+                    <a class="navbar-brand" >File Upload</a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Upload History <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li class="active"><a href="#">Image History</a></li>
+                            </ul>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-3">
+
+                    <h3>Files in S3</h3>
+
+                    <div>
+                       
+                        <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                            Bucket Name  
+                        </div>
+
+          
+                        <div nv-file-drop="" uploader="uploader" options="{ url: '/foo' }">
+                            <div nv-file-over="" uploader="uploader" over-class="another-file-over-class" class="well my-drop-zone">
+                                Bucket Number <p>Total Bucker: = {{sum}}</p>
+                            </div>
+                        </div>
+                    </div>
+ 
+                </div>
+
+			  <div class="col-md-9" style="margin-bottom: 40px">
+
+                    <h3>Upload History:</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th width="50%">Name</th>
+                                <th ng-show="uploader.isHTML5">Size</th>
+                                <th ng-show="uploader.isHTML5">Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in uploader.queue">
+                               
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div>
+                        <div>
+                            
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </div>
+                        <form method="POST" enctype="multipart/form-data" action="/upload">
+                          <p>Upload Images：<input type="file" id="upfile" name="file" /></p>
+	                        <button  type="submit" class="btn btn-success btn-s" >
+	                            <span class="glyphicon glyphicon-upload"></span> Upload
+	                        </button>
+	                        
+	                       
+                        
+                        </form>
+                    </div>
+
+                </div>
+
+            </div>
+        
+
+        </div>
+
+       
+    </body>
+</html>
